@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="com.meallogger.squarecamera"
+  version="0.1">
+  <name>Square Camera</name>
+  <description>Cordova Square Camera Plugin</description>
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="SquareCamera">
+        <param name="android-package" value="com.meallogger.squarecamera.SquareCamera"/>
+      </feature>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-feature android:name="android.hardware.camera" />
+      <uses-permission android:name="android.permission.CAMERA" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <activity android:name="com.desmond.squarecamera.CameraActivity" />
+    </config-file>
+    <js-module src="www/square-camera.js" name="SquareCamera">
+      <clobbers target="squareCamera" />
+    </js-module>
+    <source-file src="src/android/SquareCamera.java" target-dir="src/com/meallogger/squarecamera" />
+    <framework src="lib/squarecamera/build.gradle" custom="true" type="gradleReference"/>
+  </platform>
+</plugin>
