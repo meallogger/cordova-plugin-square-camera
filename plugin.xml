@@ -25,5 +25,6 @@
     </js-module>
     <source-file src="src/android/SquareCamera.java" target-dir="src/com/meallogger/squarecamera" />
     <framework src="lib/squarecamera/build.gradle" custom="true" type="gradleReference"/>
+    <framework src="com.android.support:appcompat-v7:23+" />
   </platform>
 </plugin>
