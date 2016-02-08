@@ -1,7 +1,7 @@
 
 repositories {
   maven {
-    url "http://dl.bintray.com/boxme/maven"
+    url "http://dl.bintray.com/santervo/maven"
   }
 }
 
