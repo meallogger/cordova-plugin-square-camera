@@ -2,6 +2,8 @@ package com.meallogger.squarecamera;
 
 
 import android.content.Intent;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import org.apache.cordova.CallbackContext;
@@ -17,22 +19,31 @@ public class SquareCamera extends CordovaPlugin {
   private static final int REQUEST_CAMERA = 0;
 
   private CallbackContext callbackContext;
+  private JSONArray args;
 
   private static final String PICTURE_MIN_WIDTH = "pictureMinWidth";
   private static final String STORAGE_DIRECTORY = "storageDirectory";
 
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    this.args = args;
     this.callbackContext = callbackContext;
 
     if (action.equals("getPicture")) {
-      getPicture(args.getJSONObject(0));
+      if(cordova.hasPermission(Manifest.permission.CAMERA)) {
+        getPicture();
+      }
+      else {
+        cordova.requestPermission(this, REQUEST_CAMERA, Manifest.permission.CAMERA);
+      }
       return true;
     }
 
     return false;
   }
 
-  public void getPicture(JSONObject opts) throws JSONException {
+
+  public void getPicture() throws JSONException {
+    JSONObject opts = args.getJSONObject(0);
     Intent intent = new Intent(this.cordova.getActivity(), CameraActivity.class);
     if(!opts.isNull(PICTURE_MIN_WIDTH)) {
       intent.putExtra(CameraActivity.EXTRA_PICTURE_MIN_WIDTH, opts.getInt(PICTURE_MIN_WIDTH));
@@ -51,5 +62,16 @@ public class SquareCamera extends CordovaPlugin {
     }
   }
 
-}
+  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
+    for(int result : grantResults) {
+      if(result == PackageManager.PERMISSION_DENIED) {
+        callbackContext.error("Permission to camera was denied.");
+        return;
+      }
+    }
 
+    if(requestCode == REQUEST_CAMERA) {
+      getPicture();
+    }
+  }
+}
