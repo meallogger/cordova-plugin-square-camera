@@ -1,6 +1,6 @@
 package com.meallogger.squarecamera;
 
-
+import android.app.Activity;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -55,6 +55,15 @@ public class SquareCamera extends CordovaPlugin {
   }
 
   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    if(resultCode == Activity.RESULT_CANCELED) {
+      callbackContext.error("Cancelled.");
+      return;
+    }
+    else if(resultCode != Activity.RESULT_OK) {
+      callbackContext.error("Error while taking photo. resultCode=" + resultCode);
+      return;
+    }
+
     if(requestCode == REQUEST_CAMERA) {
       Uri imageUri = intent.getData();
 
